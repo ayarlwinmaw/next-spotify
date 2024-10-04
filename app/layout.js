@@ -14,9 +14,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         {children}
-        {/* <Script src="https://sdk.scdn.co/spotify-player.js" strategy="beforeInteractive" /> */}
+        <Script
+          src="https://sdk.scdn.co/spotify-player.js"
+          strategy="afterInteractive"  // Change this to load after the main content
+        />
       </body>
-      
     </html>
   );
 }
