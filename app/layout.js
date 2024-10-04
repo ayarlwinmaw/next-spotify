@@ -1,6 +1,7 @@
+// app/layout.js
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Script from "next/script";
+import SpotifyScript from '../components/SpotifyScript'; // Adjust path as necessary
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,11 +14,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <SpotifyScript />
         {children}
-        <Script
-          src="https://sdk.scdn.co/spotify-player.js"
-          strategy="afterInteractive"  // Change this to load after the main content
-        />
       </body>
     </html>
   );

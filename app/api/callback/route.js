@@ -24,8 +24,11 @@ export async function GET(request) {
     const data = await spotifyApi.authorizationCodeGrant(code);
     const { access_token, refresh_token } = data.body;
 
+    // Construct the absolute URL for redirection
+    const redirectUrl = new URL('/', request.url).origin + `?access_token=${access_token}`;
+
     // Redirect to home with the access token
-    return NextResponse.redirect(`/?access_token=${access_token}`);
+    return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error('Error retrieving access token:', error.message); // Log detailed error
     return NextResponse.json({ error: 'Authentication failed' }, { status: 500 });
