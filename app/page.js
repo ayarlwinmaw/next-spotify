@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import SpotifyPlayer from '../components/SpotifyPlayer'; // Import the Spotify Player component
 import { useRouter } from 'next/navigation';
+import Slider from '../components/Slider';
 
 export default function Home() {
   const [accessToken, setAccessToken] = useState(null);
@@ -31,6 +32,8 @@ export default function Home() {
           <button onClick={handleLogin}>Login</button>
         </div>
       )}
+          <Slider/>
     </div>
+
   );
 }
