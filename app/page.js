@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 // import SpotifyPlayer from '../components/SpotifyPlayer'; // Import the Spotify Player component
 import { useRouter } from 'next/navigation';
 import Slider from '../components/Slider';
-import Player from '../components/Player'
+import Dashboard from '../components/Dashboard'
 
 export default function Home() {
   const [accessToken, setAccessToken] = useState(null);
@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <div>
       {accessToken ? (
-        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />// Show the player if the user is authenticated
+        <Dashboard accessToken={accessToken} trackUri={playingTrack?.uri} />// Show the player if the user is authenticated
       ) : (
         <div>
           <h1>Login to Spotify</h1>
