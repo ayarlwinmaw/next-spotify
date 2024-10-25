@@ -8,8 +8,8 @@ const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID
 })
 
-export default function Dashboard({code}) {
-    const accessToken = useAuth(code); 
+export default function Dashboard({accessToken}) {
+    // const accessToke
     const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [playingTrack, setPlayingTrack] = useState();
@@ -22,18 +22,18 @@ export default function Dashboard({code}) {
     }
     // console.log(playingTrack.title)
     // console.log(playingTrack.artistName)
-    useEffect(()=>{
-        if(!playingTrack) return
-        axios.get('http://localhost:3001/lyrics',{
-            params:{
-                track: playingTrack.title,
-                // artist: playingTrack.artistName
-                artistName: playingTrack.artistName
-            }
-        }).then(res=>{
-            setLyrics(res.data.lyrics)
-        })
-    },[playingTrack])
+    // useEffect(()=>{
+    //     if(!playingTrack) return
+    //     axios.get('http://localhost:3001/lyrics',{
+    //         params:{
+    //             track: playingTrack.title,
+    //             // artist: playingTrack.artistName
+    //             artistName: playingTrack.artistName
+    //         }
+    //     }).then(res=>{
+    //         setLyrics(res.data.lyrics)
+    //     })
+    // },[playingTrack])
 
     useEffect(() => {
         if(!accessToken) return
