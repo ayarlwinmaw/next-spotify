@@ -74,9 +74,9 @@ export default function Dashboard({accessToken}) {
                 placeholder="Search Songs/Artists" 
                 value={search} 
                 onChange={e => setSearch(e.target.value)}
-                className="border border-gray-300 rounded p-2"
+                className="border border-gray-300 rounded p-2 text-green-500"
             />
-            <div className="flex-grow my-2 overflow-y-auto"> 
+            <div className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"> 
                 {searchResults.map(track => (
                     <TrackSearchResult track={track} key={track.uri} chooseTrack={chooseTrack} />
                 ))}
