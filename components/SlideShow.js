@@ -6,8 +6,8 @@ import { Fade } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 
 const fadeProperties = {
-  duration: 300, // Duration of the fade animation in milliseconds
-  transitionDuration: 100, // Duration of the transition between slides in milliseconds
+  duration: 2000, // Duration of the fade animation in milliseconds
+  transitionDuration: 200, // Duration of the transition between slides in milliseconds
   infinite: true, // Whether the slideshow should loop infinitely
   indicators: false, // Whether to show slide indicators
   arrows:false, // Whether to show arrow navigation
@@ -21,11 +21,11 @@ const Slideshow = ({ imageUrls }) => {
     "https://images.unsplash.com/photo-1444525873963-75d329ef9e1b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80"
   ];
   return (
-    <div className="slide-container">
+    <div className="slide-container h-full w-full overflow-hidden">
       <Fade {...fadeProperties}>
         {imageUrls.map((imageUrl, index) => (
-          <div className="each-fade" key={index}>
-            <div className="image-container" >
+          <div className="each-fade h-full w-full" key={index}>
+            <div className="image-container h-full w-full relative" >
               <Image 
                 src={imageUrl} 
                 alt={`Slide ${index + 1}`} 
@@ -34,9 +34,23 @@ const Slideshow = ({ imageUrls }) => {
                   width: '100%',
                   height: 'auto',
                 }}
-                width={640}
+                width={840}
                 height={640}
+                loading='lazy'
+                objectFit='cover'
+                objectPosition='center'
                 />
+                {/* <Image 
+                  src={imageUrl} 
+                  alt={`Slide ${index + 1}`} 
+                  // fill
+                  height={600}
+                  width={800}
+                  objectFit="cover" // Ensures the image scales to cover the container
+                  objectPosition="center" // Centers the image vertically and horizontally
+                  sizes='100vw, 100vh'
+                  loading='lazy'
+                /> */}
             </div>
           </div>
         ))}

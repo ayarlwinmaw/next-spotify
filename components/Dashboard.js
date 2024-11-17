@@ -2,7 +2,7 @@ import { useState, useEffect} from 'react';
 import Player from './Player';
 import SpotifyWebApi from 'spotify-web-api-node';
 import TrackSearchResult from './TrackSearchResult';
-
+import Slider from './Slider';
 
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID
@@ -74,19 +74,26 @@ export default function Dashboard({accessToken}) {
                 placeholder="Search Songs/Artists" 
                 value={search} 
                 onChange={e => setSearch(e.target.value)}
-                className="border border-gray-300 rounded p-2 text-green-500"
+                className="absolute top-0 w-full border border-rose-300 rounded p-2 text-rose-500 caret-rose focus:border-rose-700"
             />
-            <div className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"> 
-                {searchResults.map(track => (
-                    <TrackSearchResult track={track} key={track.uri} chooseTrack={chooseTrack} />
-                ))}
-                {searchResults.length === 0 && (
-                    <div className="text-center whitespace-pre">
-                        {lyrics}
-                    </div>
-                )}
+
+            { search && (
+                <div className="backdrop-blur-sm absolute top-10 w-full overflow-y-auto h-lvh px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"> 
+                    {searchResults.map(track => (
+                        <TrackSearchResult track={track} key={track.uri} chooseTrack={chooseTrack} />
+                    ))}
+                    {searchResults.length === 0 && (
+                        <div className="text-center whitespace-pre">
+                            {lyrics}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            <div className='-z-20 relative w-full h-[calc(100%-60px)] overflow-hidden'>
+                <Slider/>
             </div>
-            <div> 
+            <div className="absolute left-0 right-0 bottom-0"> 
                 <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
             </div>
         </div>

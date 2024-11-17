@@ -1,7 +1,7 @@
 // app/layout.js
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SpotifyScript from '../components/SpotifyScript'; // Adjust path as necessary
+// import SpotifyScript from '../components/SpotifyScript'; // Adjust path as necessary
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SpotifyScript />
+        {/* <SpotifyScript /> */}
         {children}
       </body>
     </html>

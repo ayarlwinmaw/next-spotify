@@ -25,7 +25,6 @@ const Slider = () => {
 
   return (
     <div>
-      <h1>Component</h1>
       <SlideShow imageUrls={imageUrls} />
     </div>
   );

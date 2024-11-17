@@ -9,7 +9,7 @@ export default function Player({accessToken, trackUri}){
 
     if (!accessToken) return null
     return (
-    <SpotifyPlayer
+    <SpotifyPlayer className="absolute bottom-0"
     token = {accessToken}
     showSaveIcon 
     callback ={state =>{
