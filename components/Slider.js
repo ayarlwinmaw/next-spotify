@@ -5,6 +5,7 @@ import SlideShow from './SlideShow';
 
 const Slider = () => {
   const [imageUrls, setImageUrls] = useState([]);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     async function fetchImageUrls() {

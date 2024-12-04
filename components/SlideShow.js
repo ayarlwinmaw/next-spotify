@@ -37,8 +37,6 @@ const Slideshow = ({ imageUrls }) => {
                 width={840}
                 height={640}
                 loading='lazy'
-                objectFit='cover'
-                objectPosition='center'
                 />
                 {/* <Image 
                   src={imageUrl} 

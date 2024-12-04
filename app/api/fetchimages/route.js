@@ -5,7 +5,7 @@ export async function GET(request) {
         const data = await response.json();
 
         const imageUrls = data.map(fileId => {
-            console.log("File ID:", fileId); // Log each fileId to verify its value
+            //console.log("File ID:", fileId); // Log each fileId to verify its value
             // Check if fileId is a valid string
             if (typeof fileId === 'string' && fileId.trim() !== '') {
                 return `https://drive.google.com/uc?export=view&id=${fileId.trim()}`;
