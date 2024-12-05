@@ -91,7 +91,13 @@ export default function Dashboard({ accessToken }) {
             </div>
 
             {/* Render LyricsComponent only if there is a playingTrack */}
-            {playingTrack && <LyricsComponent playingTrack={playingTrack} />}
+            {playingTrack && 
+                <div className="fixed inset-0 flex justify-center items-center">
+                    <div className="w-[400px] h-[600px] bg-white overflow-y-auto text-green-500">
+                        <LyricsComponent playingTrack={playingTrack} />
+                    </div>
+                </div>
+            }
         </div>
     );
 }

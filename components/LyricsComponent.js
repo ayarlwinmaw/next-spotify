@@ -32,7 +32,7 @@ const LyricsComponent = ({ playingTrack }) => {
     return (
         <div>
             <h2>{playingTrack.title} Lyrics</h2>
-            <p>{lyrics}</p>
+            <pre className='text-pretty'>{lyrics}</pre>
         </div>
     );
 };
