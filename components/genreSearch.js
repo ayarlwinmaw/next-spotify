@@ -23,6 +23,7 @@ async function getGenres(artist, track) {
         if (tags && tags.length > 0) {
             // Extract the top three tags
             const topTags = tags.slice(0, 3).map(tag => tag.name);
+            console.log(topTags);
 
             return topTags; // Return array of top three tags
         } else {

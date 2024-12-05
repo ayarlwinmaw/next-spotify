@@ -1,5 +1,4 @@
-// LyricsComponent.js
-'use client'; // Ensure this file is treated as a client component
+'use client';
 
 import { useEffect, useState } from 'react';
 
@@ -31,8 +30,21 @@ const LyricsComponent = ({ playingTrack }) => {
 
     return (
         <div>
-            <h2>{playingTrack.title} Lyrics</h2>
-            <pre className='text-pretty'>{lyrics}</pre>
+            
+            <div className="text-pretty leading-normal">
+    {lyrics
+        ? lyrics.split('\n').map((line, index) =>
+              line.trim() === '' ? ( // Check if the line is empty
+                  <br key={index} />
+              ) : (
+                  <p key={index} className="mb-1">
+                      {line}
+                  </p>
+              )
+          )
+        : 'Loading lyrics...'}
+</div>
+
         </div>
     );
 };

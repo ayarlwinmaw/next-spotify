@@ -22,6 +22,7 @@ export default function Dashboard({ accessToken }) {
         setPlayingTrack(track);
         setSearch('');
         setLyrics('');
+        // handleSearch();
     }
 
     useEffect(() => {
@@ -54,6 +55,12 @@ export default function Dashboard({ accessToken }) {
         return () => cancel = true;
     }, [search, accessToken]);
 
+    useEffect(() => {
+        if (!playingTrack) return;
+
+        handleSearch(playingTrack.artistName, playingTrack.title);
+    }, [playingTrack]);
+
     const handleSearch = async (artist, track) => {
         const result = await getGenres(artist, track);
         setGenres(result);
@@ -82,9 +89,11 @@ export default function Dashboard({ accessToken }) {
                 </div>
             )}
 
-            <div className='-z-20 relative w-full h-[calc(100%-60px)] overflow-hidden'>
-                <Slider genres={genres} />
-            </div>
+            { playingTrack && (
+                <div className='-z-20 relative w-full h-[calc(100%-60px)] overflow-hidden'>
+                    <Slider genres={genres} />
+                </div>
+            )} 
 
             <div className="absolute left-0 right-0 bottom-0">
                 <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
@@ -92,11 +101,12 @@ export default function Dashboard({ accessToken }) {
 
             {/* Render LyricsComponent only if there is a playingTrack */}
             {playingTrack && 
-                <div className="fixed inset-0 flex justify-center items-center">
-                    <div className="w-[400px] h-[600px] bg-white overflow-y-auto text-green-500">
-                        <LyricsComponent playingTrack={playingTrack} />
-                    </div>
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+                <div className="w-[400px] h-[600px] bg-white overflow-y-auto text-green-500 rounded-xl p-10">
+                    <LyricsComponent playingTrack={playingTrack} />
                 </div>
+            </div>
+            
             }
         </div>
     );

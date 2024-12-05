@@ -1,16 +1,24 @@
-// components/YourComponent.js
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 import SlideShow from './SlideShow';
 
-const Slider = () => {
+const Slider = ({ genres }) => { // Accept genres as a prop
   const [imageUrls, setImageUrls] = useState([]);
-  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     async function fetchImageUrls() {
+      if (!genres || genres.length === 0) {
+        console.error('No genres provided');
+        return;
+      }
+
       try {
-        const response = await fetch('http://localhost:3000/api/fetchimages');
+         // Construct query parameters for genres
+         const genreQuery = `genre=${genres.map(genre => encodeURIComponent(genre)).join('&')}`;
+         
+ 
+         // Fetch data using a relative path
+         const response = await fetch(`/api/fetchimages?${genreQuery}`);
         if (!response.ok) {
           throw new Error('Failed to fetch image URLs');
         }
@@ -22,7 +30,7 @@ const Slider = () => {
     }
 
     fetchImageUrls();
-  }, []); // Empty dependency array to ensure useEffect runs only once when the component mounts
+  }, [genres]); // Fetch data whenever genres change
 
   return (
     <div>
