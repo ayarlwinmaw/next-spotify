@@ -5,6 +5,7 @@ import TrackSearchResult from './TrackSearchResult';
 import Slider from './Slider';
 import { getGenres } from './genreSearch';
 import LyricsComponent from './LyricsComponent'; // Import the LyricsComponent
+import PlaylistQueue from './PlaylistQueue';
 
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID
@@ -98,6 +99,12 @@ export default function Dashboard({ accessToken }) {
             <div className="absolute left-0 right-0 bottom-0">
                 <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
             </div>
+
+            {accessToken && (
+                <div className="absolute top-16 right-0 w-1/3 bg-gray-100 rounded-lg shadow-md p-4">
+                    <PlaylistQueue accessToken={accessToken} playingTrack={playingTrack} />
+                </div>
+            )}
 
             {/* Render LyricsComponent only if there is a playingTrack */}
             {playingTrack && 
