@@ -1,39 +1,42 @@
 import { useState, useEffect } from 'react';
-import Player from './Player';
 import SpotifyWebApi from 'spotify-web-api-node';
 import TrackSearchResult from './TrackSearchResult';
+import PlaylistQueue from './PlaylistQueue';
 import Slider from './Slider';
 import { getGenres } from './genreSearch';
-import LyricsComponent from './LyricsComponent'; // Import the LyricsComponent
-import PlaylistQueue from './PlaylistQueue';
+import LyricsComponent from './LyricsComponent';
 
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID
-})
+});
 
 export default function Dashboard({ accessToken }) {
     const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [playingTrack, setPlayingTrack] = useState();
     const [lyrics, setLyrics] = useState("");
-    const [selectedTrack, setSelectedTrack] = useState(null);
+    const [queueTracks, setQueueTracks] = useState([]); // Track queue state
     const [genres, setGenres] = useState([]);
 
+    // Choose track for playing
     function chooseTrack(track) {
-        setPlayingTrack(track);
-        setSearch('');
-        setLyrics('');
-        // handleSearch();
+        setPlayingTrack(track);  // Set the currently playing track
+        setSearch('');  // Clear search field
+        setLyrics('');  // Clear lyrics if switching tracks
+        setQueueTracks(prevQueue => [...prevQueue, track]);  // Add track to queue
     }
 
+    // Set access token for Spotify API
     useEffect(() => {
         if (!accessToken) return;
         spotifyApi.setAccessToken(accessToken);
     }, [accessToken]);
 
+    // Search tracks based on the search term
     useEffect(() => {
         if (!search) return setSearchResults([]);
         if (!accessToken) return;
+
         let cancel = false;
         spotifyApi.searchTracks(search).then(res => {
             if (cancel) return;
@@ -56,12 +59,14 @@ export default function Dashboard({ accessToken }) {
         return () => cancel = true;
     }, [search, accessToken]);
 
+    // Fetch genre information for the current playing track
     useEffect(() => {
         if (!playingTrack) return;
 
         handleSearch(playingTrack.artistName, playingTrack.title);
     }, [playingTrack]);
 
+    // Handle genre search
     const handleSearch = async (artist, track) => {
         const result = await getGenres(artist, track);
         setGenres(result);
@@ -90,31 +95,28 @@ export default function Dashboard({ accessToken }) {
                 </div>
             )}
 
-            { playingTrack && (
+            {playingTrack && (
                 <div className='-z-20 relative w-full h-[calc(100%-60px)] overflow-hidden'>
                     <Slider genres={genres} />
                 </div>
-            )} 
+            )}
 
-            <div className="absolute left-0 right-0 bottom-0">
-                <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-            </div>
-
-            {accessToken && (
+            {/* Queue display */}
+            {queueTracks.length > 0 && (
                 <div className="absolute top-16 right-0 w-1/3 bg-gray-100 rounded-lg shadow-md p-4">
-                    <PlaylistQueue accessToken={accessToken} playingTrack={playingTrack} />
+                    <h2 className="text-xl font-bold">Queue</h2>
+                    <PlaylistQueue queueTracks={queueTracks} />
                 </div>
             )}
 
-            {/* Render LyricsComponent only if there is a playingTrack */}
-            {playingTrack && 
+            {/* Render LyricsComponent if there is a playingTrack */}
+            {playingTrack && (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-                <div className="w-[400px] h-[600px] bg-white overflow-y-auto text-green-500 rounded-xl p-10">
-                    <LyricsComponent playingTrack={playingTrack} />
+                    <div className="w-[400px] h-[600px] bg-white overflow-y-auto text-green-500 rounded-xl p-10">
+                        <LyricsComponent playingTrack={playingTrack} />
+                    </div>
                 </div>
-            </div>
-            
-            }
+            )}
         </div>
     );
 }

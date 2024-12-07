@@ -8,7 +8,21 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-// Step 1: Generate the authorization URL with scopes (this part is typically run in your authentication route)
+// Define the scopes you need
+const scopes = [
+  'user-read-private', // Read private data
+  'user-read-email', // Read email
+  'playlist-read-private', // Read playlists
+  'playlist-modify-public', // Modify public playlists
+  'playlist-modify-private', // Modify private playlists
+  'user-library-read', // Read user library
+  'user-library-modify', // Modify user library
+  'app-remote-control', // Remote control app
+  'user-read-playback-state', // Read playback state
+  'user-modify-playback-state', // Modify playback state
+  // Add more scopes as needed
+];
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
@@ -21,43 +35,30 @@ export async function GET(request) {
   console.log('Authorization code:', code); // Log the received code
 
   try {
-    // Define the required scopes for your Spotify API interactions
-    const scopes = [
-      'user-read-recently-played',    // Read the recently played songs
-      'user-read-playback-state',     // Read the playback state
-      'user-modify-playback-state',   // Control playback state (e.g., play/pause)
-      'playlist-read-private',        // Read private playlists
-      'playlist-read-collaborative',  // Read collaborative playlists
-    ];
+    // Set the scopes before exchanging the code for an access token
+    spotifyApi.setAccessToken('');
+    spotifyApi.setRefreshToken('');
 
-    // Ensure that `scopes` is an array before calling `.join()`
-    const scopeString = Array.isArray(scopes) ? scopes.join(' ') : scopes;
-
-    // Ensure you are passing the scopes when generating the authorization URL
-    const authorizeUrl = spotifyApi.createAuthorizeURL(scopeString, { show_dialog: true });
-
-    // If no code is present, redirect the user to the authorization URL
-    if (!code) {
-      return NextResponse.redirect(authorizeUrl);
-    }
-
-    // Step 2: Exchange the authorization code for an access token and refresh token
+    // Exchange the code for an access token
     const data = await spotifyApi.authorizationCodeGrant(code);
+    const { access_token, refresh_token } = data.body;
 
-    // Extract tokens and scope from the response
-    const { access_token, refresh_token, scope } = data.body;
-
-    console.log('Access token:', access_token);  // Log the access token
-    console.log('Refresh token:', refresh_token); // Log the refresh token
-    console.log('Scopes granted:', scope); // Log the scopes granted
+    // Set the tokens in the SpotifyWebApi instance
+    spotifyApi.setAccessToken(access_token);
+    spotifyApi.setRefreshToken(refresh_token);
 
     // Construct the absolute URL for redirection
     const redirectUrl = new URL('/', request.url).origin + `?access_token=${access_token}`;
 
-    // Redirect to the home page with the access token
+    // Redirect to home with the access token
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error('Error retrieving access token:', error.message); // Log detailed error
     return NextResponse.json({ error: 'Authentication failed' }, { status: 500 });
   }
+}
+
+// Generate the Spotify Authorization URL with scopes
+export function generateSpotifyAuthUrl() {
+  return spotifyApi.createAuthorizeURL(scopes, null); // Optional: add a state parameter for additional security
 }
