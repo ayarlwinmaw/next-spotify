@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "genius-lyrics": "^4.4.7",
+    "https": "^1.0.0",
     "install": "^0.13.0",
     "next": "^15.0.3",
     "next-auth": "^4.24.7",
+    "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
     "react-slideshow-image": "^4.3.1",

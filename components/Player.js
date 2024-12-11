@@ -1,22 +1,32 @@
-import {useState,useEffect} from "react";
-import  SpotifyPlayer from "react-spotify-web-playback";
+import React, { useState } from 'react';
+import SpotifyWebPlayback from 'react-spotify-web-playback';
 
-export default function Player({accessToken, trackUri}){
+export default function Player({ accessToken, trackUri, onProgressUpdate }) {
+    const [progressMs, setProgressMs] = useState(0);
 
-    const [play,setPlay] = useState(false);
-    useEffect(() => setPlay(true),[trackUri])
+    const handleCallback = (state) => {
+        if (!state.isPlaying) return;
+        setProgressMs(state.progressMs);
+        onProgressUpdate(state.progressMs); // Pass progressMs to the parent component
+    };
 
+    if (!accessToken) return null;
 
-    if (!accessToken) return null
     return (
-    <SpotifyPlayer className="absolute bottom-0"
-    token = {accessToken}
-    
-    callback ={state =>{
-        if (!state.isPlaying) setPlay(false)
-    }}
-    play = {play}
-    uris = {trackUri ? [trackUri] : []}
-    />
-    )
+        <SpotifyWebPlayback
+            token={accessToken}
+            uris={trackUri ? [trackUri] : []}
+            callback={handleCallback}
+            play={true}
+            styles={{
+                activeColor: '#fff',
+                bgColor: '#333',
+                color: '#fff',
+                loaderColor: '#fff',
+                sliderColor: '#1cb954',
+                trackArtistColor: '#ccc',
+                trackNameColor: '#fff',
+            }}
+        />
+    );
 }

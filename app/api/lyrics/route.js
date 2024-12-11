@@ -1,25 +1,39 @@
-// app/api/lyrics/route.js
-export async function GET(request) {
-    const { searchParams } = new URL(request.url);
-    const artist = searchParams.get("artist");
-    const track = searchParams.get("track");
+import fetch from 'node-fetch';
+import https from 'https';
+
+const agent = new https.Agent({ rejectUnauthorized: false });
+
+export async function GET(req) {
+    const { searchParams } = new URL(req.url);
+    const artist = searchParams.get('artist');
+    const track = searchParams.get('track');
 
     if (!artist || !track) {
-        return new Response(JSON.stringify({ error: 'Artist and track are required' }), { status: 400 });
+        return new Response(
+            JSON.stringify({ error: 'Artist and track are required.' }),
+            { status: 400, headers: { 'Content-Type': 'application/json' } }
+        );
     }
 
-    try {
-        // Example of fetching lyrics from an external API or service
-        // Replace this with the actual API call for lyrics fetching
-        const response = await fetch(`https://api.lyrics.ovh/v1/${artist}/${track}`);
-        const data = await response.json();
+    const apiUrl = `https://api.textyl.co/api/lyrics?q=${encodeURIComponent(`${artist} ${track}`)}`;
 
-        if (data.lyrics) {
-            return new Response(JSON.stringify({ lyrics: data.lyrics }), { status: 200 });
-        } else {
-            return new Response(JSON.stringify({ error: 'Lyrics not found' }), { status: 404 });
+    try {
+        const response = await fetch(apiUrl, { agent });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch lyrics from external API.');
         }
+
+        const data = await response.json();
+        return new Response(JSON.stringify(data), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+        });
     } catch (error) {
-        return new Response(JSON.stringify({ error: 'Failed to fetch lyrics' }), { status: 500 });
+        console.error('Error fetching lyrics:', error);
+        return new Response(
+            JSON.stringify({ error: 'Failed to fetch lyrics' }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
     }
 }
