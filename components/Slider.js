@@ -7,10 +7,7 @@ const Slider = ({ genres }) => { // Accept genres as a prop
 
   useEffect(() => {
     async function fetchImageUrls() {
-      if (!genres || genres.length === 0) {
-        console.error('No genres provided');
-        return;
-      }
+      
 
       try {
          // Construct query parameters for genres

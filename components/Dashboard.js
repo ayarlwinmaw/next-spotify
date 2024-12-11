@@ -5,6 +5,7 @@ import Slider from './Slider';
 import { getGenres } from './genreSearch';
 import LyricsComponent from './LyricsComponent'; // Import LyricsComponent
 import SpotifyWebApi from 'spotify-web-api-node';
+import Link from 'next/link';
 
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -82,7 +83,7 @@ export default function Dashboard({ accessToken }) {
             />
 
             {search && (
-                <div className="backdrop-blur-sm absolute top-10 w-full overflow-y-auto h-lvh px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
+                <div className="z-60 backdrop-blur-sm absolute top-10 w-full overflow-y-auto h-lvh px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
                     {searchResults.map((track) => (
                         <TrackSearchResult track={track} key={track.uri} chooseTrack={chooseTrack} />
                     ))}
@@ -104,11 +105,18 @@ export default function Dashboard({ accessToken }) {
 
             {playingTrack && (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-                    <div className="w-[400px] h-[600px] bg-white overflow-y-auto text-green-500 rounded-xl p-10">
+                    <div className="w-[400px] h-[600px] backdrop-blur-sm bg-white/60 overflow-y-auto text-green-500 rounded-xl p-10">
                     <LyricsComponent track={playingTrack} />{/* Pass playingTrack */}
                     </div>
                 </div>
             )}
+
+            <Link href="/about">
+                    <div className="fixed bottom-24 right-5 p-3 bg-gray-800 text-white rounded-full shadow-lg hover:bg-green-500 transition-all">
+                    <i className="fas fa-info-circle text-2xl"></i>
+                    </div>
+            </Link>
         </div>
+        
     );
 }

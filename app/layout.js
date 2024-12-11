@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 // import SpotifyScript from '../components/SpotifyScript'; // Adjust path as necessary
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

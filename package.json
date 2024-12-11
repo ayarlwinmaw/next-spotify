@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "genius-lyrics": "^4.4.7",
     "https": "^1.0.0",
     "install": "^0.13.0",

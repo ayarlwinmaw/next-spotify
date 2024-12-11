@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Slider from '../components/Slider';
 import Dashboard from '../components/Dashboard'
 
+
+
 export default function Home() {
   const [accessToken, setAccessToken] = useState(null);
   const router = useRouter();
