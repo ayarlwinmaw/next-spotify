@@ -36,9 +36,23 @@ export default function Home() {
       ) : (
         <div>
           
-          <button type='button' className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" onClick={handleLogin}>
-            Login in with Spotify
-          </button>
+          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  {/* Logo */}
+  <img 
+    src="/images/logo512.png" 
+    alt="Logo" 
+    className="w-24 h-24 mb-6" 
+  />
+  {/* Login Button */}
+  <button 
+    type="button" 
+    className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75" 
+    onClick={handleLogin}
+  >
+    Login with Spotify
+  </button>
+</div>
+
         </div>
       )}
           

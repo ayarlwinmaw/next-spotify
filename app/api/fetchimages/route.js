@@ -1,3 +1,7 @@
+// Import a string similarity library (install it using `npm install string-similarity`)
+// Alternatively, implement a basic Levenshtein distance function.
+import stringSimilarity from 'string-similarity';
+
 export async function GET(request) {
     try {
         const folderName = "country";
@@ -7,40 +11,47 @@ export async function GET(request) {
         const url = new URL(request.url);
 
         // Retrieve the 'genre' query parameter (it may contain multiple genres)
-        const genres = url.searchParams.get('genre');  // This will get the whole 'genre' query string
+        const genres = url.searchParams.get('genre');
 
         if (!genres) {
             return new Response(JSON.stringify({ error: 'No genre provided' }), { status: 400 });
         }
 
+        const genreResponse = await fetch(`https://script.google.com/macros/s/AKfycbxg66d5nIkR92mJwrOgpUdAPCXZug5pMOumsphAHMRNYcwDDTTi8dIBdl5Em-ucvkjC/exec`);
+        if (!genreResponse.ok) {
+            throw new Error('Failed to get folder names');
+        }
+        const availableGenres = await genreResponse.json();
+
         // If there are multiple genres, they will be separated by '&'
         const genreList = genres.split('&').map(genre => genre.trim());
 
-        // Join the genres with a comma and replace spaces with '%20'
-        const genresParam = genreList.map(genre => encodeURIComponent(genre)).join(',');
+        // Find the closest match for each genre
+        const matchedGenres = genreList.map(inputGenre => {
+            const { bestMatch } = stringSimilarity.findBestMatch(inputGenre, availableGenres);
+            console.log(`Input Genre: ${inputGenre}, Closest Match: ${bestMatch.target}`);
+            return bestMatch.target;
+        });
 
-        // Now you can use genreList to fetch images, process the genres, etc.
-        console.log('Genres:', genreList);
+        // Join the matched genres with a comma and encode them
+        const genresParam = matchedGenres.map(genre => encodeURIComponent(genre)).join(',');
 
-       
-         // Get all 'genre' query parameters
+        // Fetch data based on the matched genres
         const response = await fetch(`https://script.google.com/macros/s/AKfycbyfUP2KfH1IxwTJn37zyS0Eh52jas3ilzp-0Dw1rqGIl790OOTt5k76SfJ9MEVOvrBA/exec?folderName=${genresParam}`);
         const data = await response.json();
 
         const imageUrls = data.map(fileId => {
-            //console.log("File ID:", fileId); // Log each fileId to verify its value
-            // Check if fileId is a valid string
             if (typeof fileId === 'string' && fileId.trim() !== '') {
                 return `https://drive.google.com/uc?export=view&id=${fileId.trim()}`;
             } else {
                 console.error("Invalid file ID:", fileId);
-                return null; // Or handle the error appropriately
+                return null;
             }
         });
 
-        return Response.json({ imageUrls});
+        return Response.json({ imageUrls });
+    } catch (error) {
+        console.error("Error:", error);
+        return new Response(JSON.stringify({ error: "INTERNAL SERVER ERROR" }), { status: 500 });
     }
-        catch(error){
-            response.status(500).json({ error: "INTERNAL SERVER ERROR"})
-        }
 }
